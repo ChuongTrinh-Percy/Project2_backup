@@ -28,7 +28,7 @@ def form_vocab_mapping(max_size):
   vocab = {}
   data = []
   counter = 0
-  f = open('corpus/SAD.csv', 'r')
+  f = open('corpus/SAD.csv', encoding="utf8")
   for i, line in enumerate(csv.reader(f)):
     counter += 1
     if counter % 100000 == 0:
@@ -66,8 +66,8 @@ def convert_to_token(sentence, vocab_map):
 
 def file_to_token(file_path, vocab_map):
   output_path = file_path + '.token'
-  with open(file_path, 'r') as input_file:
-    with open(output_path, 'w') as output_file:
+  with open(file_path, 'r',  encoding="utf8") as input_file:
+    with open(output_path, 'w', encoding="utf8") as output_file:
       counter = 0
       for line in csv.reader(input_file):
         counter += 1
@@ -90,9 +90,9 @@ def read_data(path):
   return data
 
 if __name__ == '__main__':
-  #form_vocab_mapping(50000)
-  #vocab_map, _ = read_map('corpus/mapping')
-  #file_to_token('corpus/SAD.csv', vocab_map)
-  #d = read_data('corpus/SAD.csv.token')
-  #print(d[0])]
+  # form_vocab_mapping(1000)
+  # vocab_map, _ = read_map('corpus/mapping')
+  # file_to_token('corpus/SAD.csv', vocab_map)
+  # d = read_data('corpus/SAD.csv.token')
+  # print(d[0])
   pass

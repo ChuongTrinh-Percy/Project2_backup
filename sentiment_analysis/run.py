@@ -4,9 +4,9 @@ import random
 import os
 import sys
 import numpy as np
-sys.path.append('../sentiment_analysis/')
 import dataset
-from . import model
+sys.path.append('../sentiment_analysis/')
+import model
 
 VOCAB_SIZE = 10000
 BATCH_SIZE = 32
@@ -37,7 +37,7 @@ def train():
    else:
      dataset.form_vocab_mapping(50000)
      vocab_map, _ = dataset.read_map('corpus/mapping')
-     dataset.file_to_token('corpus/SAD.csv', vocab_map)
+     dataset.file_to_token('corpus\SAD.csv', vocab_map)
 
    d = dataset.read_data('corpus/SAD.csv.token')
    random.shuffle(d)    
