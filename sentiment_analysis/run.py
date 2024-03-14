@@ -6,13 +6,13 @@ import sys
 import numpy as np
 import dataset
 sys.path.append('../sentiment_analysis/')
-import model
-
-VOCAB_SIZE = 10000
+from . import model
+# import model
+VOCAB_SIZE = 50000
 BATCH_SIZE = 32
 UNIT_SIZE = 256
 MAX_LENGTH = 40
-CHECK_STEP = 1000.
+CHECK_STEP = 10
 
 def create_model(session, mode):
   m = model.discriminator(VOCAB_SIZE,
@@ -32,14 +32,14 @@ def create_model(session, mode):
   return m
 
 def train():
-   if gfile.Exists('corpus/mapping') and gfile.Exists('corpus/SAD.csv.token'):
+   if gfile.Exists('sentiment_analysis/corpus/mapping') and gfile.Exists('sentiment_analysis/corpus/SAD.csv.token'):
      print('Files have already been formed!')
    else:
      dataset.form_vocab_mapping(50000)
-     vocab_map, _ = dataset.read_map('corpus/mapping')
-     dataset.file_to_token('corpus\SAD.csv', vocab_map)
+     vocab_map, _ = dataset.read_map('sentiment_analysis/corpus/mapping')
+     dataset.file_to_token('sentiment_analysis\corpus\SAD.csv', vocab_map)
 
-   d = dataset.read_data('corpus/SAD.csv.token')
+   d = dataset.read_data('sentiment_analysis\corpus\SAD.csv.token')
    random.shuffle(d)    
    
    train_set = d[:int(0.9 * len(d))]
@@ -52,7 +52,8 @@ def train():
    step = 0
    loss = 0
 
-   while(True):
+  #  while(True):
+   while(step <= CHECK_STEP):
      step += 1
      encoder_input, encoder_length, target = Model.get_batch(train_set)
      '''
@@ -79,7 +80,7 @@ def train():
        loss = 0
 
 def evaluate():
-  vocab_map, _ = dataset.read_map('corpus/mapping')
+  vocab_map, _ = dataset.read_map('sentiment_analysis/corpus/mapping')
   sess = tf.Session()
   Model = create_model(sess, 'test')
   Model.batch_size = 1

@@ -4,7 +4,8 @@ import os
 import sys 
 sys.path.append('sentiment_analysis/')
 import math
-
+import copy
+import threading
 import data_utils
 import seq2seq_model
 from sentiment_analysis import run
@@ -58,12 +59,14 @@ def train_MLE():
   # read dataset and split to training set and validation set
   d = data_utils.read_data(FLAGS.source_data_dir + '.token', FLAGS.target_data_dir + '.token', buckets)
   print('Total document size: %s' % sum(len(l) for l in d))
+  # d = [value for value in d if value !=[]]
 
   d_train = [[] for _ in range(len(d))]
   d_valid = [[] for _ in range(len(d))]
   for i in range(len(d)):
     d_train[i] = d[i][:int(0.9 * len(d[i]))]
     d_valid[i] = d[i][int(-0.1 * len(d[i])):]
+
 
   train_bucket_sizes = [len(d[b]) for b in range(len(d))]
   train_total_size = float(sum(train_bucket_sizes))
@@ -91,9 +94,11 @@ def train_MLE():
       print('Step %s, Training perplexity: %s, Learning rate: %s' % (step, math.exp(loss),
                                 sess.run(model.learning_rate))) 
       for i in range(len(d)):
-        encoder_input, decoder_input, weight = model.get_batch(d_valid, i)
-        loss_valid, _ = model.run(sess, encoder_input, decoder_input, weight, i, forward_only = True)
-        print('  Validation perplexity in bucket %s: %s' % (i, math.exp(loss_valid)))
+        print(f'd_valid: {d_valid}_at: {i}')
+        if d_valid[i] != []:
+          encoder_input, decoder_input, weight = model.get_batch(d_valid, i)
+          loss_valid, _ = model.run(sess, encoder_input, decoder_input, weight, i, forward_only = True)
+          print('  Validation perplexity in bucket %s: %s' % (i, math.exp(loss_valid)))
       if len(loss_list) > 2 and loss > max(loss_list[-3:]):
         sess.run(model.learning_rate_decay)
       loss_list.append(loss)  

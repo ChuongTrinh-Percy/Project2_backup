@@ -3,14 +3,18 @@ from __future__ import division
 from __future__ import print_function
 
 import copy
-
+import threading
 # We disable pylint because we need python3 compatibility.
 from six.moves import xrange  # pylint: disable=redefined-builtin
 from six.moves import zip  # pylint: disable=redefined-builtin
-
-from tensorflow.contrib.rnn.python.ops import core_rnn
+import tensorflow as tf
+setattr(tf.contrib.rnn.GRUCell, '__deepcopy__', lambda self, _: self)
+setattr(tf.contrib.rnn.BasicLSTMCell, '__deepcopy__', lambda self, _: self)
+setattr(tf.contrib.rnn.MultiRNNCell, '__deepcopy__', lambda self, _: self)
+# from tensorflow.contrib.rnn.python.ops import core_rnn
 from tensorflow.contrib.rnn.python.ops import core_rnn_cell
-from tensorflow.contrib.rnn.python.ops import core_rnn_cell_impl
+# from tensorflow.contrib.rnn.python.ops import core_rnn_cell_impl
+# from tensorflow.python.ops.rnn_cell_impl import _linear
 from tensorflow.python.framework import dtypes
 from tensorflow.python.framework import ops
 from tensorflow.python.ops import array_ops
@@ -22,7 +26,7 @@ from tensorflow.python.ops import variable_scope
 from tensorflow.python.util import nest
 
 # TODO(ebrevdo): Remove once _linear is fully deprecated.
-linear = core_rnn_cell_impl._linear  # pylint: disable=protected-access
+linear = core_rnn_cell._linear  # pylint: disable=protected-access
 
 
 def _extract_argmax_and_embed(embedding,
@@ -231,7 +235,7 @@ def embedding_rnn_seq2seq(encoder_inputs,
         encoder_cell,
         embedding_classes=num_encoder_symbols,
         embedding_size=embedding_size)
-    _, encoder_state = core_rnn.static_rnn(
+    _, encoder_state = tf.nn.static_rnn(
         encoder_cell, encoder_inputs, dtype=dtype)
 
     # Decoder.
@@ -603,7 +607,7 @@ def embedding_attention_seq2seq(encoder_inputs,
         encoder_cell,
         embedding_classes=num_encoder_symbols,
         embedding_size=embedding_size)
-    encoder_outputs, encoder_state = core_rnn.static_rnn(
+    encoder_outputs, encoder_state = tf.nn.static_rnn(
         encoder_cell, encoder_inputs, dtype=dtype)
 
     # First calculate a concatenation of encoder outputs to put attention on.

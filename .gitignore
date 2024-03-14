@@ -2,10 +2,13 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+sentiment_analysis/corpus/
+sentiment_analysis/save_model/
+save_model/
 # C extensions
 *.so
 myvenv
+.venv
 # Distribution / packaging
 .Python
 build/
@@ -31,7 +34,10 @@ MANIFEST
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
-
+corpus/
+model/
+model_RL/
+saved_model/
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
@@ -121,7 +127,6 @@ celerybeat.pid
 
 # Environments
 .env
-.venv
 env/
 venv/
 ENV/

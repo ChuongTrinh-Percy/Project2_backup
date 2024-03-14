@@ -28,7 +28,7 @@ def form_vocab_mapping(max_size):
   vocab = {}
   data = []
   counter = 0
-  f = open('corpus/SAD.csv', encoding="utf8")
+  f = open('sentiment_analysis/corpus/SAD.csv', encoding="utf8")
   for i, line in enumerate(csv.reader(f)):
     counter += 1
     if counter % 100000 == 0:
@@ -46,7 +46,7 @@ def form_vocab_mapping(max_size):
   if len(vocab_list) > max_size:
     vocab_list = vocab_list[:max_size]
 
-  with open('corpus/mapping', 'w') as o:
+  with open('sentiment_analysis/corpus/mapping', 'w') as o:
     for w in vocab_list:
       o.write(w + '\n')
 
@@ -90,9 +90,9 @@ def read_data(path):
   return data
 
 if __name__ == '__main__':
-  # form_vocab_mapping(1000)
-  # vocab_map, _ = read_map('corpus/mapping')
-  # file_to_token('corpus/SAD.csv', vocab_map)
-  # d = read_data('corpus/SAD.csv.token')
-  # print(d[0])
+  form_vocab_mapping(1000)
+  vocab_map, _ = read_map('corpus/mapping')
+  file_to_token('corpus/SAD.csv', vocab_map)
+  d = read_data('corpus/SAD.csv.token')
+  print(d[0])
   pass

@@ -2,7 +2,7 @@ import tensorflow as tf
 from tensorflow.contrib import rnn
 from tensorflow.python.ops import math_ops
 from tensorflow.python.ops import array_ops
-from tensorflow.contrib.rnn.python.ops import core_rnn
+# from tensorflow.contrib.rnn.python.ops import core_rnn
 from tensorflow.contrib.rnn.python.ops import core_rnn_cell
 from six.moves import xrange
 import numpy as np

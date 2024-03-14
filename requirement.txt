@@ -1,4 +1,4 @@
-numpy
+numpy==1.18.0
 pandas
-tensorflow
-torch
+tensorflow==1.13.1
+protobuf==3.20.1
