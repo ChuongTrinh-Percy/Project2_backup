@@ -283,12 +283,13 @@ class Seq2seq():
       # step 2: get rewards according to some rules
       reward = np.ones((self.batch_size), dtype = np.float32)
       new_data = []
+      # print("batch_size= ", self.batch_size)
       for i in xrange(self.batch_size):
         token_ids = list(outputs[0][i])
         if data_utils.EOS_ID in token_ids:
           token_ids = token_ids[:token_ids.index(data_utils.EOS_ID)]
         new_data.append(([], token_ids + [data_utils.EOS_ID]))
-        #print(token_ids)
+ 
         # in this case, X is language model score
         # reward 1: ease of answering
         '''
@@ -305,7 +306,15 @@ class Seq2seq():
         r2 = self.prob(r_input, token_ids, X, bucket_id) / float(len(token_ids)) if len(token_ids) != 0 else 0
 
         # reward 3: sentiment analysis score
-        word_token = [self.vocab_list[token].decode('utf-8') for token in token_ids]
+        # print("token_ids: ", token_ids)
+        # word_token = [self.vocab_list[token].decode('utf-8') for token in token_ids]
+        word_token = []
+        for token in token_ids:
+          try:
+            word_token.append(self.vocab_list[token].decode('utf-8'))
+          except:
+            pass
+
         r3 = Y(word_token, np.array([len(token_ids)], dtype = np.int32))
         '''
         print('r1: %s' % r1)

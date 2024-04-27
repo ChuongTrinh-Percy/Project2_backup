@@ -20,7 +20,7 @@ tf.app.flags.DEFINE_string('source_data_dir', 'corpus/source', 'directory of sou
 tf.app.flags.DEFINE_string('target_data_dir', 'corpus/target', 'directory of target')
 tf.app.flags.DEFINE_string('model_dir', 'model/', 'directory of model')
 tf.app.flags.DEFINE_string('model_rl_dir', 'model_RL/', 'directory of RL model')
-tf.app.flags.DEFINE_integer('check_step', '300', 'step interval of saving model')
+tf.app.flags.DEFINE_integer('check_step', '5', 'step interval of saving model')
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -90,11 +90,12 @@ def train_MLE():
     loss_train, _ = model.run(sess, encoder_input, decoder_input, weight, bucket_id)
     loss += loss_train / FLAGS.check_step
     #print(model.token2word(sen)[0])
+    print("step at: ", step)
     if step % FLAGS.check_step == 0:
       print('Step %s, Training perplexity: %s, Learning rate: %s' % (step, math.exp(loss),
                                 sess.run(model.learning_rate))) 
       for i in range(len(d)):
-        print(f'd_valid: {d_valid}_at: {i}')
+        # print(f'd_valid: {d_valid}_at: {i}')
         if d_valid[i] != []:
           encoder_input, decoder_input, weight = model.get_batch(d_valid, i)
           loss_valid, _ = model.run(sess, encoder_input, decoder_input, weight, i, forward_only = True)
@@ -157,8 +158,7 @@ def train_RL():
     bucket_id = min([i for i in range(len(train_buckets_scale))
                        if train_buckets_scale[i] > random_number])
     
-    # the same encoder_input for sampling batch_size times
-    #encoder_input, decoder_input, weight = model.get_batch(d, bucket_id, rand = False)    
+    # the same encoder_input for sampling batch_size times   
     encoder_input, decoder_input, weight = model.get_batch(d, bucket_id, rand = False)    
     loss = model.run(sess1, encoder_input, decoder_input, weight, bucket_id, X = LM, Y = SA)
    
@@ -168,12 +168,12 @@ def train_RL():
 
     #print(model.token2word(encoder_input)[0])
     #print(model.token2word(sen)[0])
-    
+    # print("step at: ", step)
     if step % FLAGS.check_step == 0:
       print('Loss at step %s: %s' % (step, loss))
       checkpoint_path = os.path.join('model_RL', "RL.ckpt")
       model.saver.save(sess1, checkpoint_path, global_step = step)
-      print('Saving model at step %s' % step)
+      # print('Saving model at step %s' % step)
 
 
 def test():

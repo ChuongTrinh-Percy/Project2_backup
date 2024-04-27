@@ -6,8 +6,8 @@ import sys
 import numpy as np
 import dataset
 sys.path.append('../sentiment_analysis/')
-from . import model
-# import model
+# from . import model
+import model
 VOCAB_SIZE = 50000
 BATCH_SIZE = 32
 UNIT_SIZE = 256
@@ -74,7 +74,7 @@ def train():
        Model.mode = 'train'
        print("Train Loss: %s" % loss)
        print("Valid Loss: %s" % temp_loss)
-       checkpoint_path = os.path.join('saved_model/', 'dis.ckpt')
+       checkpoint_path = os.path.join('sentiment_analysis/saved_model/', 'dis.ckpt')
        Model.saver.save(sess, checkpoint_path, global_step = step)
        print("Model Saved!")
        loss = 0
@@ -98,5 +98,5 @@ def evaluate():
     sys.stdout.flush()
     sentence = sys.stdin.readline()
 if __name__ == '__main__':
-  train()
-  #evaluate()
+  # train()
+  evaluate()
